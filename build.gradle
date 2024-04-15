@@ -271,7 +271,6 @@ String environments = 'src/test/skript/environments/';
 String env = project.property('testEnv') == null ? latestEnv : project.property('testEnv') + '.json'
 int envJava = project.property('testEnvJavaVersion') == null ? latestJava : Integer.parseInt(project.property('testEnvJavaVersion') as String)
 
-createTestTask('foliaTest', 'Runs tests on one environment being the latest supported Java and Minecraft on Folia.', environments + 'java17/folia.json', latestJava)
 createTestTask('quickTest', 'Runs tests on one environment being the latest supported Java and Minecraft.', environments + latestEnv, latestJava)
 createTestTask('skriptTestJava17', 'Runs tests on all Java 17 environments.', environments + 'java17', latestJava)
 createTestTask('skriptTestJava8', 'Runs tests on all Java 8 environments.', environments + 'java8', oldestJava)
