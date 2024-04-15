@@ -299,12 +299,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public boolean breakNaturally() {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().breakNaturally();
 				}
-			});
+			};
 			return true;
 		} else {
 			return false;
@@ -314,12 +314,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public boolean breakNaturally(@Nullable ItemStack tool) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().breakNaturally(tool);
 				}
-			});
+			};
 			return true;
 		} else {
 			return false;
@@ -329,12 +329,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public boolean breakNaturally(boolean triggerEffect) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().breakNaturally(triggerEffect);
 				}
-			});
+			};
 			return true;
 		} else {
 			return false;
@@ -344,12 +344,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public boolean breakNaturally(ItemStack tool, boolean triggerEffect) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().breakNaturally(tool, triggerEffect);
 				}
-			});
+			};
 			return true;
 		} else {
 			return false;
@@ -409,12 +409,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public void setType(Material type, boolean applyPhysics) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().setType(type, applyPhysics);
 				}
-			});
+			};
 		} else { // Can't do physics for block state
 			state.setType(type);
 		}
@@ -428,12 +428,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public void setBlockData(BlockData data) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().setBlockData(data);
 				}
-			});
+			};
 		} else {
 			state.setBlockData(data);
 		}
@@ -442,12 +442,12 @@ public class BlockStateBlock implements Block {
 	@Override
 	public void setBlockData(BlockData data, boolean applyPhysics) {
 		if (delayChanges) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+			new Task(Skript.getInstance(), 1) {
 				@Override
 				public void run() {
 					state.getBlock().setBlockData(data, applyPhysics);
 				}
-			});
+			};
 		} else { // Cannot apply physics to a block state
 			state.setBlockData(data);
 		}

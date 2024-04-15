@@ -141,6 +141,59 @@ public class Environment {
 		}
 	}
 
+	public static class FoliaResource extends Resource {
+
+		private final String version;
+		@Nullable
+		private transient String source;
+
+		public FoliaResource(String version, String target) {
+			super(null, target);
+			this.version = version;
+		}
+
+		@Override
+		public String getSource() {
+			try {
+				generateSource();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			if (source == null)
+				throw new IllegalStateException();
+			return source;
+		}
+
+		private void generateSource() throws IOException {
+			if (source != null)
+				return;
+
+			String stringUrl = "https://api.papermc.io/v2/projects/folia/versions/" + version;
+			URL url = new URL(stringUrl);
+			JsonObject jsonObject;
+			try (InputStream is = url.openStream()) {
+				InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+				jsonObject = gson.fromJson(reader, JsonObject.class);
+			}
+
+			JsonArray jsonArray = jsonObject.get("builds").getAsJsonArray();
+
+			int latestBuild = -1;
+			for (JsonElement jsonElement : jsonArray) {
+				int build = jsonElement.getAsInt();
+				if (build > latestBuild) {
+					latestBuild = build;
+				}
+			}
+
+			if (latestBuild == -1)
+				throw new IllegalStateException("No builds for this version");
+
+			source = "https://api.papermc.io/v2/projects/folia/versions/" + version + "/builds/" + latestBuild
+				+ "/downloads/folia-" + version + "-" + latestBuild + ".jar";
+		}
+	}
+
 	/**
 	 * Resources that need to be copied.
 	 */
@@ -159,6 +212,12 @@ public class Environment {
 	private final List<PaperResource> paperDownloads;
 
 	/**
+	 * Folia resources that need to be downloaded.
+	 */
+	@Nullable
+	private final List<FoliaResource> foliaDownloads;
+
+	/**
 	 * Where Skript should be placed under platform root.
 	 * Directories created as needed.
 	 */
@@ -169,11 +228,12 @@ public class Environment {
 	 */
 	private final String[] commandLine;
 
-	public Environment(String name, List<Resource> resources, @Nullable List<Resource> downloads, @Nullable List<PaperResource> paperDownloads, String skriptTarget, String... commandLine) {
+	public Environment(String name, List<Resource> resources, @Nullable List<Resource> downloads, @Nullable List<PaperResource> paperDownloads, @Nullable List<FoliaResource> foliaDownloads, String skriptTarget, String... commandLine) {
 		this.name = name;
 		this.resources = resources;
 		this.downloads = downloads;
 		this.paperDownloads = paperDownloads;
+		this.foliaDownloads = foliaDownloads;
 		this.skriptTarget = skriptTarget;
 		this.commandLine = commandLine;
 	}
@@ -213,6 +273,8 @@ public class Environment {
 			downloads.addAll(this.downloads);
 		if (this.paperDownloads != null)
 			downloads.addAll(this.paperDownloads);
+		if (this.foliaDownloads != null)
+			downloads.addAll(this.foliaDownloads);
 		// Download additional resources
 		for (Resource resource : downloads) {
 			assert resource != null;
